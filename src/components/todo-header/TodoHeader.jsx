@@ -5,7 +5,9 @@ const TodoHeader = ({ onADDTodo }) => {
 
     const onFormSubmit = (e) => {
         e.preventDefault();
-        onADDTodo(value);
+        if (value !== "") {
+            onADDTodo(value);
+        }
         setValue("");
     };
 

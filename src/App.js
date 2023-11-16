@@ -14,8 +14,28 @@ const reducer = (todos, action) => {
         isCompleted: false
       }
     ];
-  }else if (action.type === "REMOVE") {
+  } 
+  
+  else if (action.type === "REMOVE") {
     return todos.filter(todo => todo.id !== action.payload.id);
+  
+  } 
+  
+  else if (action.type === "COMPLETED") {
+    return todos.map(todo => {
+      if (todo.id === action.payload.id) {
+        return {
+          ...todo,
+          isCompleted: !todo.isCompleted
+        }
+      }
+
+      return todo;
+    });
+  }
+
+  else if (action.type === "REMOVE_ALL_COMPLETED") {
+    return todos.filter(todo => !todo.isCompleted);
   }
 };
 
@@ -23,7 +43,7 @@ function App() {
   const [todos, dispatch] = useReducer(reducer, []);
 
   return (
-    <div className="App">
+    <div className="todo-app">
       <TodoHeader
         onADDTodo={(text) =>{
           dispatch({
@@ -32,20 +52,51 @@ function App() {
               text
             }
           });
-        }}
+          }}
       />
+     {
+      todos.length > 0 ?
       <TodoListItems
-        todos={todos}
-        noRemoveTodo={(id) => {
+      todos={todos}
+      noRemoveTodo={(id) => {
+        dispatch({
+          type: "REMOVE",
+          payload: {
+            id
+          }
+        });
+      }}
+      onCompletedTodo={(id) => {
+        dispatch({
+          type: "COMPLETED",
+          payload: {
+            id
+          }
+        });
+      }}
+    />
+    :
+     // <p>Todo is not defined</p>
+     null
+     }
+
+        {
+          todos.length > 0 ?
+          <TodoFooter
+       todos={todos.length}
+       completedTodos={todos.filter(todo => todo.isCompleted).length}
+       onRemoveAllCompletedTodos={() => {
           dispatch({
-            type: "REMOVE",
-            payload: {
-              id
-            }
+              type: "REMOVE_ALL_COMPLETED"
           });
-        }}
-      />nuiu
-      <TodoFooter/>
+       }}
+       />
+      :
+      null
+      
+        }
+
+        
     </div>
   );
 }

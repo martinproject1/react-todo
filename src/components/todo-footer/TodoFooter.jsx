@@ -1,8 +1,8 @@
-const TodoFooter = () => {
+const TodoFooter = ({ todos, completedTodos, onRemoveAllCompletedTodos }) => {
     return (
         <div className="todo-footer">
-            <span>3 / 10</span>
-            <button>
+            <span>{completedTodos} / {todos}</span>
+            <button onClick={onRemoveAllCompletedTodos}>
                 Clear all completed
             </button>
         </div>
